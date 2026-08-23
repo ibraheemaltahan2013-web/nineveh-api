@@ -56,6 +56,7 @@ model User {
   assignments   Assignment[] @relation("AssignmentTeacher")
   grades        Grade[]      @relation("GradeTeacher")
   attendances   Attendance[] @relation("AttendanceTeacher")
+  schedules     Schedule[]
 }
 
 model Teacher {
@@ -101,6 +102,7 @@ model Class {
   schedules   Schedule[]
   assignments Assignment[]
   exams       Exam[]
+  attendances Attendance[]
 }
 
 model Schedule {
@@ -141,6 +143,7 @@ model Assignment {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   submissions Submission[]
+  grades      Grade[]
 }
 
 model Submission {
@@ -154,23 +157,26 @@ model Submission {
   status        AssignmentStatus @default(PENDING)
   submittedAt   DateTime?
   gradedAt      DateTime?
-  grade         Grade?
+  gradeId       String?
+  grade         Grade?   @relation(fields: [gradeId], references: [id])
 }
 
 model Grade {
-  id          String   @id @default(cuid())
-  studentId   String
-  student     Student  @relation("GradeStudent", fields: [studentId], references: [id])
-  teacherId   String
-  teacher     User     @relation("GradeTeacher", fields: [teacherId], references: [id])
+  id           String   @id @default(cuid())
+  studentId    String
+  student      Student  @relation("GradeStudent", fields: [studentId], references: [id])
+  teacherId    String
+  teacher      User     @relation("GradeTeacher", fields: [teacherId], references: [id])
   assignmentId String?
-  assignment  Assignment? @relation(fields: [assignmentId], references: [id])
-  examId      String?
-  exam        Exam?    @relation(fields: [examId], references: [id])
-  score       Int
-  maxScore    Int
-  feedback    String?
-  createdAt   DateTime @default(now())
+  assignment   Assignment? @relation(fields: [assignmentId], references: [id])
+  submissionId String?
+  submission   Submission? @relation(fields: [submissionId], references: [id])
+  examId       String?
+  exam         Exam?    @relation(fields: [examId], references: [id])
+  score        Int
+  maxScore     Int
+  feedback     String?
+  createdAt    DateTime @default(now())
 }
 
 model Exam {
