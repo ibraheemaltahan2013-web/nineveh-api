@@ -54,7 +54,6 @@ model User {
   receivedMessages Message[] @relation("ReceivedMessages")
   announcements Announcement[] @relation("AnnouncementAuthor")
   assignments   Assignment[] @relation("AssignmentTeacher")
-  submissions   Submission[] @relation("SubmissionStudent")
   grades        Grade[]      @relation("GradeTeacher")
   attendances   Attendance[] @relation("AttendanceTeacher")
 }
