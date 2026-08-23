@@ -157,8 +157,7 @@ model Submission {
   status        AssignmentStatus @default(PENDING)
   submittedAt   DateTime?
   gradedAt      DateTime?
-  gradeId       String?
-  grade         Grade?   @relation(fields: [gradeId], references: [id])
+  grade         Grade?
 }
 
 model Grade {
@@ -169,7 +168,7 @@ model Grade {
   teacher      User     @relation("GradeTeacher", fields: [teacherId], references: [id])
   assignmentId String?
   assignment   Assignment? @relation(fields: [assignmentId], references: [id])
-  submissionId String?
+  submissionId String?   @unique
   submission   Submission? @relation(fields: [submissionId], references: [id])
   examId       String?
   exam         Exam?    @relation(fields: [examId], references: [id])
