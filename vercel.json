@@ -1,0 +1,9 @@
+{
+  "buildCommand": "npm install && npx prisma generate",
+  "outputDirectory": ".",
+  "installCommand": "npm install --cache D:/npm-cache",
+  "framework": null,
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api/index.js" }
+  ]
+}
