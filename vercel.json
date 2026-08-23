@@ -2,9 +2,13 @@
   "installCommand": "npm install --cache D:/npm-cache",
   "buildCommand": "npx prisma generate",
   "outputDirectory": "public",
-  "functions": {
-    "api/index.js": {
-      "maxDuration": 30
+  "builds": [
+    {
+      "src": "api/index.js",
+      "use": "@vercel/node"
     }
-  }
+  ],
+  "routes": [
+    { "src": "/api/(.*)", "dest": "/api/index.js" }
+  ]
 }
