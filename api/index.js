@@ -6,7 +6,16 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { z } from 'zod';
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({
+  log: ['error', 'warn'],
+});
+
+process.on('uncaughtException', (err) => {
+  console.error('Uncaught Exception:', err.message, err.stack);
+});
+process.on('unhandledRejection', (err) => {
+  console.error('Unhandled Rejection:', err);
+});
 const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret';
 const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:5173';
 
@@ -29,8 +38,13 @@ const loginSchema = z.object({
   password: z.string().min(1)
 });
 
-app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+app.get('/api/health', async (req, res) => {
+  try {
+    await prisma.$queryRaw`SELECT 1`;
+    res.json({ status: 'ok', db: 'connected', timestamp: new Date().toISOString() });
+  } catch (e) {
+    res.json({ status: 'ok', db: 'error', error: e.message, timestamp: new Date().toISOString() });
+  }
 });
 
 app.post('/api/auth/register', async (req, res) => {
